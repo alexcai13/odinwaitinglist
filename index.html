@@ -121,6 +121,63 @@
       margin-bottom: 28px;
       opacity: 0;
     }
+    .logo-right {
+      margin-left: auto;
+    }
+    .insta-link {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 34px;
+      height: 34px;
+      border-radius: 9px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.10);
+      color: rgba(255,255,255,0.5);
+      text-decoration: none;
+      transition: background 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;
+    }
+    .insta-link:hover {
+      background: linear-gradient(135deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+      border-color: transparent;
+      color: #fff;
+      box-shadow: 0 4px 16px rgba(220,39,67,0.4);
+    }
+
+    /* ── Waitlist counter ── */
+    .counter-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(124,107,255,0.08);
+      border: 1px solid rgba(124,107,255,0.18);
+      border-radius: 10px;
+      padding: 10px 14px;
+      margin-bottom: 28px;
+      opacity: 0;
+    }
+    .counter-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: #4ade80;
+      box-shadow: 0 0 6px rgba(74,222,128,0.8);
+      flex-shrink: 0;
+      animation: pulse-dot 2s ease-in-out infinite;
+    }
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%       { opacity: 0.5; transform: scale(0.8); }
+    }
+    .counter-text {
+      font-size: 13px;
+      color: rgba(255,255,255,0.55);
+      line-height: 1;
+    }
+    .counter-text strong {
+      color: rgba(255,255,255,0.9);
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+    }
     .logo-mark {
       width: 36px; height: 36px;
       background: linear-gradient(135deg, var(--accent), var(--accent-2));
@@ -370,6 +427,21 @@
     <div class="logo-wrap" id="logo">
       <div class="logo-mark">O</div>
       <span class="logo-name">Odin</span>
+      <div class="logo-right">
+        <a href="https://www.instagram.com/downloadodin/" target="_blank" rel="noopener noreferrer" class="insta-link" title="Follow us on Instagram">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+            <circle cx="12" cy="12" r="4.5"/>
+            <circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" stroke="none"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+
+    <!-- Waitlist counter -->
+    <div class="counter-bar" id="counter-bar">
+      <div class="counter-dot"></div>
+      <span class="counter-text"><strong id="waitlist-count">220</strong> people already on the waitlist</span>
     </div>
 
     <!-- Headline -->
@@ -518,8 +590,9 @@
       .to('.orb-3', { opacity: 1, duration: 2.5, ease: 'power1.inOut' }, 0.6)
       .to('#card', { opacity: 1, y: 0, duration: 1, ease: 'power4.out' }, 0.4)
       .to('#logo', { opacity: 1, duration: 0.6 }, 0.65)
-      .to('#headline', { opacity: 1, duration: 0.7, y: 0 }, 0.8)
-      .to('#subtext', { opacity: 1, duration: 0.6 }, 0.95)
+      .to('#counter-bar', { opacity: 1, duration: 0.5 }, 0.78)
+      .to('#headline', { opacity: 1, duration: 0.7, y: 0 }, 0.88)
+      .to('#subtext', { opacity: 1, duration: 0.6 }, 1.0)
       .to('#fg-name',  { opacity: 1, y: 0, duration: 0.5 }, 1.05)
       .to('#fg-email', { opacity: 1, y: 0, duration: 0.5 }, 1.15)
       .to('#fg-phone', { opacity: 1, y: 0, duration: 0.5 }, 1.25)
@@ -532,6 +605,40 @@
        create a form, paste your form ID below.
     ════════════════════════════════════════ */
     const FORMSPREE_ID = 'mojyjkog'; // ← replace with your Formspree form ID
+
+    /* ════════════════════════════════════════
+       WAITLIST COUNTER
+    ════════════════════════════════════════ */
+    const BASE_COUNT = 220;
+    const STORAGE_KEY = 'odin_waitlist_extra';
+
+    function getCount() {
+      const extra = parseInt(localStorage.getItem(STORAGE_KEY) || '0', 10);
+      return BASE_COUNT + extra;
+    }
+
+    function incrementCount() {
+      const extra = parseInt(localStorage.getItem(STORAGE_KEY) || '0', 10);
+      localStorage.setItem(STORAGE_KEY, extra + 1);
+    }
+
+    function animateCountTo(target) {
+      const el = document.getElementById('waitlist-count');
+      const start = parseInt(el.textContent.replace(/,/g, ''), 10);
+      const duration = 600;
+      const startTime = performance.now();
+      function tick(now) {
+        const elapsed = now - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        el.textContent = Math.round(start + (target - start) * eased).toLocaleString();
+        if (progress < 1) requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+    }
+
+    // Set initial count on load
+    document.getElementById('waitlist-count').textContent = getCount().toLocaleString();
 
     const form        = document.getElementById('waitlist-form');
     const submitBtn   = document.getElementById('submit-btn');
@@ -588,6 +695,8 @@
 
     function showSuccess(email) {
       confirmEmail.textContent = email;
+      incrementCount();
+      animateCountTo(getCount());
 
       // Swap form → success with GSAP
       gsap.to(form, {
