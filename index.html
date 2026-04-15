@@ -340,6 +340,20 @@
       </svg>
     </a>
 
+    <!-- Website banner -->
+    <a href="https://odinlifts.com" target="_blank" rel="noopener noreferrer" class="insta-banner" id="website-banner" style="margin-bottom: 32px;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;opacity:0.7;">
+        <circle cx="12" cy="12" r="10"/>
+        <path d="M2 12h20"/>
+        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+      </svg>
+      <span class="insta-handle">odinlifts.com</span>
+      <span class="insta-cta">Visit site</span>
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
+      </svg>
+    </a>
+
     <!-- Logo -->
     <div class="logo-wrap" id="logo">
       <img src="ravenlogo.png" alt="Odin" class="logo-img" />
@@ -357,7 +371,7 @@
       The future is<br />almost here.
     </h1>
     <p class="subtext" id="subtext">
-      Be the first to know when we launch. Drop your details below — we'll reach out the moment you're in.
+      Be the first to know when we launch.
     </p>
 
     <!-- Form -->
@@ -436,9 +450,10 @@
     ════════════════════════════════════════ */
     const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
 
-    tl.to('#card',        { opacity: 1, y: 0, duration: 0.7, ease: 'power4.out' }, 0.1)
-      .to('#insta-banner',{ opacity: 1, duration: 0.5 }, 0.35)
-      .to('#logo',        { opacity: 1, duration: 0.5 }, 0.5)
+    tl.to('#card',          { opacity: 1, y: 0, duration: 0.7, ease: 'power4.out' }, 0.1)
+      .to('#insta-banner',  { opacity: 1, duration: 0.5 }, 0.35)
+      .to('#website-banner',{ opacity: 1, duration: 0.5 }, 0.44)
+      .to('#logo',          { opacity: 1, duration: 0.5 }, 0.55)
       .to('#counter-bar', { opacity: 1, duration: 0.5 }, 0.62)
       .to('#headline',    { opacity: 1, duration: 0.5 }, 0.72)
       .to('#subtext',     { opacity: 1, duration: 0.5 }, 0.84)
